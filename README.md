@@ -6,9 +6,17 @@ Experience the next generation of financial tracking with **Horizontal Intellige
 
 ## 📽️ Tutorial & Full Feature Walkthrough
 
-Experience InsightPro in action. This 1-minute tutorial covers the premium landing page, horizontal workspace navigation, and real-time ledger synchronization.
+> Click to watch — a 1-minute walkthrough covering the landing page, horizontal workspace navigation, and real-time ledger synchronization.
 
-![InsightPro Tutorial Walkthrough](C:/Users/user/.gemini/antigravity/brain/b461224a-82ac-4270-a660-9bd12c7f8380/insightpro_full_tutorial_v834_1772655514852.webp)
+![InsightPro Tutorial Walkthrough](public/tutorial.webp)
+
+---
+
+## 🖼️ Screenshots
+
+| Landing Page | Dashboard |
+|---|---|
+| ![Landing](public/landing-preview.png) | ![Dashboard](public/dashboard-preview.png) |
 
 ---
 
@@ -25,10 +33,10 @@ Experience InsightPro in action. This 1-minute tutorial covers the premium landi
 ## 🚀 Tech Stack
 
 - **Core**: Next.js 13, React, TypeScript
-- **Styling**: Tailwind CSS v4 (Migrated for peak performance)
+- **Styling**: Tailwind CSS v4
 - **Backend**: Next.js API Routes + Prisma ORM
 - **Database**: Supabase (PostgreSQL)
-- **Authentication**: Clerk Integration
+- **Authentication**: Clerk
 
 ---
 
@@ -41,25 +49,20 @@ Experience InsightPro in action. This 1-minute tutorial covers the premium landi
 
 ### 2. Initialization
 ```bash
-# Clone and install
 npm install
-
-# Set up environment
-cp .env.example .env.local
+cp .env.example .env.local  # Fill in your credentials
 ```
 
 ### 3. Database Sync
-Add your `DATABASE_URL` to `.env.local` and synchronize:
 ```bash
 npx prisma generate
 npx prisma migrate dev --name init
 ```
 
-### 4. Deploy Dev Server
+### 4. Start Dev Server
 ```bash
-npm run dev
+npm run dev  # http://localhost:3000
 ```
-Accessible at `http://localhost:3000`
 
 ---
 
@@ -71,14 +74,9 @@ insight-pro/
 ├── components/      # Glassmorphic Widget Ecosystem
 ├── lib/             # Prisma & Database Abstractions
 ├── styles/          # Tailwind v4 Style Engine
+├── public/          # Static assets (hero, tutorial)
 └── prisma/          # Intelligence Schema
 ```
-
----
-
-## 📜 Documentation
-
-For a detailed technical breakdown of the UI overhaul and implementation decisions, refer to the [walkthrough.md](C:/Users/user/.gemini/antigravity/brain/b461224a-82ac-4270-a660-9bd12c7f8380/walkthrough.md).
 
 ---
 
