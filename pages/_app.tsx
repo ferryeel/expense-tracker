@@ -4,7 +4,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ClerkProvider>
+    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
       <Component {...pageProps} />
     </ClerkProvider>
   );
