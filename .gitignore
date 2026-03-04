@@ -14,3 +14,4 @@ yarn-error.log*
 coverage/
 pnpm-lock.yaml
 package-lock.json
+/generated/prisma

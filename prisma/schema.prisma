@@ -1,0 +1,60 @@
+// Expense Tracker Prisma Schema
+// Models: User, Category, Expense
+
+generator client {
+  provider = "prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model - stores user profile information
+model User {
+  id        String      @id @default(cuid())
+  email     String      @unique
+  name      String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  
+  // Relations
+  categories Category[]
+  expenses   Expense[]
+}
+
+// Category model - expense categories
+model Category {
+  id        String      @id @default(cuid())
+  name      String
+  color     String      @default("#6366f1") // Default indigo color
+  userId    String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  
+  // Relations
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expenses  Expense[]
+  
+  @@unique([userId, name])
+}
+
+// Expense model - individual expense records
+model Expense {
+  id          String      @id @default(cuid())
+  amount      Float
+  description String?
+  date        DateTime    @default(now())
+  userId      String
+  categoryId  String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  // Relations
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category    Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([categoryId])
+  @@index([date])
+}

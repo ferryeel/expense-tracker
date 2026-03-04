@@ -9,16 +9,20 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "13.5.4",
+    "@prisma/client": "^7.4.2",
+    "@supabase/supabase-js": "^2.98.0",
+    "dotenv": "^17.3.1",
+    "next": "^13.5.11",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@types/node": "20.4.2",
+    "@types/node": "^20.4.2",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "eslint": "8.47.0",
     "eslint-config-next": "13.5.4",
+    "prisma": "^7.4.2",
     "typescript": "5.2.2"
   }
 }
