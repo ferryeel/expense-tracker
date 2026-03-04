@@ -33,7 +33,7 @@ export default async function handler(
       });
 
       // Calculate statistics
-      const amounts = expenses.map((e) => e.amount);
+      const amounts = expenses.map((e: any) => e.amount);
       const totalExpenses = calculateTotal(amounts);
       const thisMonth = calculateCurrentMonth(expenses);
       const thisWeek = calculateCurrentWeek(expenses);

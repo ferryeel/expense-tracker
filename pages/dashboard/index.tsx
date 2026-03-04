@@ -139,7 +139,7 @@ export default function Dashboard() {
                     </p>
                     <div className="overflow-x-auto">
                       <div className="space-y-2 max-h-96 overflow-y-auto">
-                        {expenses.slice(0, 10).map((expense) => (
+                        {expenses.slice(0, 10).map((expense: any) => (
                           <div
                             key={expense.id}
                             className="flex justify-between items-center p-3 bg-gray-50 rounded hover:bg-gray-100"
@@ -178,7 +178,7 @@ export default function Dashboard() {
               />
               <ExpenseList
                 expenses={expenses}
-                onDelete={async (id) => {
+                onDelete={async (id: string) => {
                   await deleteExpense(id);
                   await fetchStats();
                 }}
@@ -191,7 +191,7 @@ export default function Dashboard() {
           {activeTab === 'categories' && (
             <CategoryManager
               categories={categories}
-              onCreateCategory={async (name, color) => {
+              onCreateCategory={async (name: string, color?: string) => {
                 await createCategory(name, color);
               }}
               onDeleteCategory={deleteCategory}

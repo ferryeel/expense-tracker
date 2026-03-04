@@ -39,11 +39,11 @@ export default function CategoryPieChart({ stats, isLoading = false }: CategoryP
   }
 
   const data = {
-    labels: stats.topCategories.map((cat) => cat.name),
+    labels: stats.topCategories.map((cat: any) => cat.name),
     datasets: [
       {
         label: 'Spending by Category',
-        data: stats.topCategories.map((cat) => cat.amount),
+        data: stats.topCategories.map((cat: any) => cat.amount),
         backgroundColor: COLORS.slice(0, stats.topCategories.length),
         borderColor: '#fff',
         borderWidth: 2,
