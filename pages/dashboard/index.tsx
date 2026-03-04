@@ -6,6 +6,9 @@ import ExpenseForm from '@/components/ExpenseForm';
 import ExpenseList from '@/components/ExpenseList';
 import CategoryManager from '@/components/CategoryManager';
 import StatsOverview from '@/components/StatsOverview';
+import CategoryPieChart from '@/components/CategoryPieChart';
+import MonthlyBarChart from '@/components/MonthlyBarChart';
+import TimelineChart from '@/components/TimelineChart';
 import { useExpenses } from '@/hooks/useExpenses';
 import { useCategories } from '@/hooks/useCategories';
 import { useStats } from '@/hooks/useStats';
@@ -16,7 +19,7 @@ export default function Dashboard() {
   const { expenses, createExpense, deleteExpense, fetchExpenses, loading: expensesLoading } = useExpenses();
   const { categories, createCategory, deleteCategory, fetchCategories, loading: categoriesLoading } = useCategories();
   const { stats, fetchStats, loading: statsLoading } = useStats();
-  const [activeTab, setActiveTab] = useState<'overview' | 'expenses' | 'categories'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'expenses' | 'categories' | 'charts'>('overview');
 
   useEffect(() => {
     if (isLoaded && !user) {
@@ -73,10 +76,10 @@ export default function Dashboard() {
           <StatsOverview stats={stats} isLoading={statsLoading} />
 
           {/* Tabs */}
-          <div className="mt-8 flex gap-4 mb-6 border-b border-gray-300">
+          <div className="mt-8 flex gap-4 mb-6 border-b border-gray-300 overflow-x-auto">
             <button
               onClick={() => setActiveTab('overview')}
-              className={`px-6 py-3 font-semibold border-b-2 transition ${
+              className={`px-6 py-3 font-semibold border-b-2 transition whitespace-nowrap ${
                 activeTab === 'overview'
                   ? 'border-blue-600 text-blue-600'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
@@ -86,7 +89,7 @@ export default function Dashboard() {
             </button>
             <button
               onClick={() => setActiveTab('expenses')}
-              className={`px-6 py-3 font-semibold border-b-2 transition ${
+              className={`px-6 py-3 font-semibold border-b-2 transition whitespace-nowrap ${
                 activeTab === 'expenses'
                   ? 'border-blue-600 text-blue-600'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
@@ -96,13 +99,23 @@ export default function Dashboard() {
             </button>
             <button
               onClick={() => setActiveTab('categories')}
-              className={`px-6 py-3 font-semibold border-b-2 transition ${
+              className={`px-6 py-3 font-semibold border-b-2 transition whitespace-nowrap ${
                 activeTab === 'categories'
                   ? 'border-blue-600 text-blue-600'
                   : 'border-transparent text-gray-600 hover:text-gray-900'
               }`}
             >
               Categories
+            </button>
+            <button
+              onClick={() => setActiveTab('charts')}
+              className={`px-6 py-3 font-semibold border-b-2 transition whitespace-nowrap ${
+                activeTab === 'charts'
+                  ? 'border-blue-600 text-blue-600'
+                  : 'border-transparent text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Charts
             </button>
           </div>
 
@@ -184,6 +197,17 @@ export default function Dashboard() {
               onDeleteCategory={deleteCategory}
               isLoading={categoriesLoading}
             />
+          )}
+
+          {/* Charts Tab */}
+          {activeTab === 'charts' && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <CategoryPieChart stats={stats} isLoading={statsLoading} />
+                <TimelineChart expenses={expenses} isLoading={expensesLoading} />
+              </div>
+              <MonthlyBarChart expenses={expenses} isLoading={expensesLoading} />
+            </div>
           )}
         </div>
       </main>
