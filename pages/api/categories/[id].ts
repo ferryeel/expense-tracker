@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getAuth } from '@clerk/nextjs/server';
+import { getAuth } from '@/lib/clerk-mock';
 import { prisma } from '@/lib/prisma';
 
 export default async function handler(

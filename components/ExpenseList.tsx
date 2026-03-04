@@ -1,112 +1,67 @@
-import { useState } from 'react';
-import { formatCurrency } from '@/lib/utils';
-
-interface Expense {
-  id: string;
-  amount: number;
-  description: string;
-  date: string;
-  categoryId: string;
-  category: {
-    id: string;
-    name: string;
-    color: string;
-  };
-  createdAt: string;
-  updatedAt: string;
-}
+import React from 'react';
 
 interface ExpenseListProps {
-  expenses: Expense[];
-  onDelete: (id: string) => Promise<void>;
-  isLoading?: boolean;
+  expenses: any[];
+  onDelete: (id: string) => void;
+  isLoading: boolean;
 }
 
-export default function ExpenseList({ expenses, onDelete, isLoading = false }: ExpenseListProps) {
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this expense?')) return;
-
-    setDeletingId(id);
-    setError(null);
-    try {
-      await onDelete(id);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to delete expense');
-    } finally {
-      setDeletingId(null);
-    }
-  };
+const ExpenseList: React.FC<ExpenseListProps> = ({ expenses, onDelete, isLoading }) => {
+  if (isLoading) {
+    return <div className="space-y-3 animate-pulse">
+      {[1, 2, 3, 4, 5].map(i => <div key={i} className="h-20 bg-white/40 rounded-2xl"></div>)}
+    </div>;
+  }
 
   if (expenses.length === 0) {
     return (
-      <div className="bg-white p-6 rounded-lg shadow text-center text-gray-500">
-        <p>No expenses yet. Add your first expense to get started!</p>
+      <div className="flex flex-col items-center justify-center py-20 opacity-40 grayscale">
+        <div className="text-4xl mb-4">📂</div>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">No active records in this cycle.</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <h2 className="text-2xl font-bold mb-4">Recent Expenses</h2>
+    <div className="space-y-2 px-1 pb-4">
+      {expenses.map((expense) => (
+        <div
+          key={expense.id}
+          className="flex items-center justify-between p-4 bg-white/40 border border-white/60 rounded-2xl group hover:bg-white/80 hover:scale-[1.01] transition-all cursor-default"
+        >
+          <div className="flex items-center space-x-4">
+            <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-xl group-hover:scale-110 transition-transform shadow-sm border border-white">
+              {expense.category.icon || '☄️'}
+            </div>
+            <div>
+              <p className="text-sm font-bold text-slate-800 leading-none">{expense.description || 'System Entry'}</p>
+              <div className="flex items-center space-x-2 mt-1.5">
+                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: expense.category.color || '#6366f1' }}></span>
+                <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                  {expense.category.name} • {new Date(expense.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                </p>
+              </div>
+            </div>
+          </div>
 
-      {error && (
-        <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-          {error}
+          <div className="flex items-center space-x-6">
+            <div className="text-right">
+              <p className="text-lg font-black text-slate-900 tracking-tighter">${expense.amount.toFixed(2)}</p>
+              <p className="text-[9px] font-black text-emerald-500 uppercase tracking-widest text-right mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity">Cleared</p>
+            </div>
+
+            <button
+              onClick={() => onDelete(expense.id)}
+              className="p-2.5 rounded-xl bg-red-50 text-red-100 hover:text-red-500 hover:bg-red-100 transition-all opacity-0 group-hover:opacity-100"
+              title="Purge Record"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+            </button>
+          </div>
         </div>
-      )}
-
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-50 border-b-2 border-gray-200">
-            <tr>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Category</th>
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Description</th>
-              <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700">Amount</th>
-              <th className="px-4 py-3 text-center text-sm font-semibold text-gray-700">Action</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y">
-            {expenses.map((expense) => (
-              <tr key={expense.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 text-sm">
-                  {new Date(expense.date).toLocaleDateString()}
-                </td>
-                <td className="px-4 py-3 text-sm">
-                  <span
-                    className="px-3 py-1 rounded-full text-white text-xs font-medium"
-                    style={{ backgroundColor: expense.category.color }}
-                  >
-                    {expense.category.name}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-700">
-                  {expense.description || '-'}
-                </td>
-                <td className="px-4 py-3 text-sm font-semibold text-right text-gray-900">
-                  {formatCurrency(expense.amount)}
-                </td>
-                <td className="px-4 py-3 text-sm text-center">
-                  <button
-                    onClick={() => handleDelete(expense.id)}
-                    disabled={deletingId === expense.id || isLoading}
-                    className="text-red-600 hover:text-red-800 disabled:text-gray-400 font-medium"
-                  >
-                    {deletingId === expense.id ? 'Deleting...' : 'Delete'}
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="mt-4 text-sm text-gray-600">
-        Showing {expenses.length} expense{expenses.length !== 1 ? 's' : ''}
-      </div>
+      ))}
     </div>
   );
-}
+};
+
+export default ExpenseList;

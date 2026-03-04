@@ -1,124 +1,85 @@
-# Expense Tracker
+# InsightPro
 
-A Next.js full-stack expense tracking application with Supabase PostgreSQL, Prisma ORM, authentication, and real-time charts.
+Experience the next generation of financial tracking with **Horizontal Intelligence**. Optimized for wide-screen utility, InsightPro eliminates vertical scrolling by delivering side-by-side snapshots, ledgers, and analytics in a high-fidelity, frosted-glass interface.
 
-## Features
+---
 
-- **User Authentication** – Sign up and log in securely.
-- **Expense Management** – Add, edit, and delete expenses with categories.
-- **Categories** – Create and manage custom expense categories.
-- **Dashboard** – View expense summary, charts, and spending trends.
-- **Charts** – Visualize spending data with Chart.js.
+## 📽️ Tutorial & Full Feature Walkthrough
 
-## Tech Stack
+Experience InsightPro in action. This 1-minute tutorial covers the premium landing page, horizontal workspace navigation, and real-time ledger synchronization.
 
-- **Frontend**: Next.js 13, React, TypeScript, Tailwind CSS (ready to add)
-- **Backend**: Next.js API routes
-- **Database**: Supabase (PostgreSQL) + Prisma ORM
-- **Authentication**: Clerk (commented out by default; uncomment to enable)
+![InsightPro Tutorial Walkthrough](C:/Users/user/.gemini/antigravity/brain/b461224a-82ac-4270-a660-9bd12c7f8380/insightpro_full_tutorial_v834_1772655514852.webp)
 
-## Setup
+---
 
-### Prerequisites
+## ✨ Elite Features
 
+- **Horizontal Intelligence** – A 3-column workspace designed for wide-screen efficiency.
+- **Modern Light Aesthetic** – Professional frosted-glass (Glassmorphism) UI with indigo precision accents.
+- **Real-time Operational Ledger** – High-density transaction documentation with instant feedback.
+- **Adaptive Analytics** – Magnitude allocation maps that update in real-time.
+- **Premium Landing Experience** – A high-conversion entry point with pulsating CTA and hero visualization.
+
+---
+
+## 🚀 Tech Stack
+
+- **Core**: Next.js 13, React, TypeScript
+- **Styling**: Tailwind CSS v4 (Migrated for peak performance)
+- **Backend**: Next.js API Routes + Prisma ORM
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Clerk Integration
+
+---
+
+## 🛠️ Setup & Installation
+
+### 1. Prerequisites
 - Node.js v18+
-- npm or yarn
-- Supabase account (free tier works great)
+- Supabase Account
+- Clerk Account
 
-### Installation
-
-1. **Clone and install dependencies:**
-   ```bash
-   npm install
-   ```
-
-2. **Set up environment variables:**
-   ```bash
-   cp .env.example .env.local
-   ```
-   Fill in your Supabase credentials (see below).
-
-3. **Configure Supabase:**
-   - Go to [supabase.com](https://supabase.com) and create a new project.
-   - Copy your project URL and API keys from **Settings > API**.
-   - Add `DATABASE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, and `NEXT_PUBLIC_SUPABASE_ANON_KEY` to `.env.local`.
-
-4. **Run Prisma migrations:**
-   ```bash
-   npx prisma migrate dev --name init
-   ```
-   This creates the `User`, `Category`, and `Expense` tables in your Supabase database.
-
-5. **Start the dev server:**
-   ```bash
-   npm run dev
-   ```
-   Server runs at `http://localhost:3000`
-
-## Project Structure
-
-```
-expense-tracker/
-├── pages/           # Next.js pages and API routes
-├── lib/             # Shared utilities (Prisma, Supabase clients)
-├── prisma/          # Prisma schema and migrations
-├── styles/          # Global CSS
-├── public/          # Static assets
-├── .env.example     # Environment variable template
-└── package.json     # Dependencies
-```
-
-## Database Schema
-
-### User
-- `id` – Unique identifier
-- `email` – User email (unique)
-- `name` – User name (optional)
-- `createdAt`, `updatedAt` – Timestamps
-
-### Category
-- `id` – Unique identifier
-- `name` – Category name (e.g. "Food", "Transport")
-- `color` – Hex color for UI visualization
-- `userId` – Foreign key to User
-- `createdAt`, `updatedAt` – Timestamps
-
-### Expense
-- `id` – Unique identifier
-- `amount` – Expense amount (float)
-- `description` – Optional description
-- `date` – Transaction date
-- `userId` – Foreign key to User
-- `categoryId` – Foreign key to Category
-- `createdAt`, `updatedAt` – Timestamps
-
-## Available Scripts
-
+### 2. Initialization
 ```bash
-npm run dev       # Start dev server
-npm run build     # Build for production
-npm start         # Start production server
-npm run lint      # Run ESLint
-npx prisma generate   # Regenerate Prisma client
-npx prisma migrate dev # Create and run migrations
-npx prisma studio    # Open Prisma Studio (visual database editor)
+# Clone and install
+npm install
+
+# Set up environment
+cp .env.example .env.local
 ```
 
-## Next Steps
+### 3. Database Sync
+Add your `DATABASE_URL` to `.env.local` and synchronize:
+```bash
+npx prisma generate
+npx prisma migrate dev --name init
+```
 
-- [ ] Add Clerk authentication and protect routes
-- [ ] Build UI components (forms, dashboard, charts)
-- [ ] Implement Expense CRUD operations
-- [ ] Add Chart.js visualization for spending trends
-- [ ] Deploy to Vercel
+### 4. Deploy Dev Server
+```bash
+npm run dev
+```
+Accessible at `http://localhost:3000`
 
-## Troubleshooting
+---
 
-**Error: "Cannot find type definition for 'node'?"**
-- Run: `npm install --save-dev @types/node`
+## 📂 System Architecture
 
-**Error: "DATABASE_URL not set"?**
-- Ensure `.env.local` exists and contains your Supabase connection string.
+```
+insight-pro/
+├── pages/           # Horizontal Dashboard & API Engine
+├── components/      # Glassmorphic Widget Ecosystem
+├── lib/             # Prisma & Database Abstractions
+├── styles/          # Tailwind v4 Style Engine
+└── prisma/          # Intelligence Schema
+```
 
-**Error: "Prisma Client not generated"?**
-- Run: `npx prisma generate`
+---
+
+## 📜 Documentation
+
+For a detailed technical breakdown of the UI overhaul and implementation decisions, refer to the [walkthrough.md](C:/Users/user/.gemini/antigravity/brain/b461224a-82ac-4270-a660-9bd12c7f8380/walkthrough.md).
+
+---
+
+© 2026 InsightPro • Intelligent Financial Systems.

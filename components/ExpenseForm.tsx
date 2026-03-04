@@ -1,162 +1,115 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCategories } from '@/hooks/useCategories';
 
 interface ExpenseFormProps {
   onSuccess: () => void;
   onCreateExpense: (data: any) => Promise<any>;
-  isLoading?: boolean;
+  isLoading: boolean;
 }
 
-export default function ExpenseForm({
-  onSuccess,
-  onCreateExpense,
-  isLoading = false,
-}: ExpenseFormProps) {
-  const { categories } = useCategories();
+const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCreateExpense, isLoading }) => {
+  const { categories, fetchCategories } = useCategories();
   const [formData, setFormData] = useState({
     amount: '',
     description: '',
-    date: new Date().toISOString().split('T')[0],
     categoryId: '',
+    date: new Date().toISOString().split('T')[0],
   });
   const [error, setError] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setSubmitting(true);
+    if (!formData.amount || !formData.categoryId) {
+      setError('Entry requires Magnitude & Segment.');
+      return;
+    }
 
     try {
-      if (!formData.amount || !formData.categoryId) {
-        throw new Error('Please fill in all required fields');
-      }
-
-      const amount = parseFloat(formData.amount);
-      if (isNaN(amount) || amount <= 0) {
-        throw new Error('Amount must be a positive number');
-      }
-
       await onCreateExpense({
-        amount,
-        description: formData.description,
-        date: new Date(formData.date).toISOString(),
-        categoryId: formData.categoryId,
+        ...formData,
+        amount: parseFloat(formData.amount),
       });
-
       setFormData({
         amount: '',
         description: '',
-        date: new Date().toISOString().split('T')[0],
         categoryId: '',
+        date: new Date().toISOString().split('T')[0],
       });
+      setError(null);
       onSuccess();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create expense');
-    } finally {
-      setSubmitting(false);
+    } catch (err: any) {
+      setError('System Error: ' + (err.message || 'Transmission failed'));
     }
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow mb-6">
-      <h2 className="text-2xl font-bold mb-4">Add New Expense</h2>
-
-      {error && (
-        <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-1">
-              Amount *
-            </label>
-            <input
-              type="number"
-              id="amount"
-              name="amount"
-              value={formData.amount}
-              onChange={handleChange}
-              placeholder="0.00"
-              step="0.01"
-              min="0"
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="categoryId" className="block text-sm font-medium text-gray-700 mb-1">
-              Category *
-            </label>
-            <select
-              id="categoryId"
-              name="categoryId"
-              value={formData.categoryId}
-              onChange={handleChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Select a category</option>
-              {categories.map((cat: any) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
-              Date
-            </label>
-            <input
-              type="date"
-              id="date"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-            Description
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Add notes about this expense..."
-            rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 shadow-none block">Magnitude</label>
+        <div className="relative">
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+          <input
+            type="number"
+            step="0.01"
+            value={formData.amount}
+            onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+            className="w-full bg-white/40 border border-white/60 rounded-xl pl-8 pr-4 py-3 text-slate-900 font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/50 transition-all"
+            placeholder="0.00"
           />
         </div>
+      </div>
 
-        <button
-          type="submit"
-          disabled={submitting || isLoading}
-          className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 font-semibold"
-        >
-          {submitting || isLoading ? 'Creating...' : 'Add Expense'}
-        </button>
-      </form>
-    </div>
+      <div>
+        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Context</label>
+        <input
+          type="text"
+          value={formData.description}
+          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          className="w-full bg-white/40 border border-white/60 rounded-xl px-4 py-3 text-slate-900 font-semibold text-sm focus:outline-none focus:border-indigo-500/50 transition-all placeholder:text-slate-300"
+          placeholder="What was this for?"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4">
+        <div>
+          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Category</label>
+          <select
+            value={formData.categoryId}
+            onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
+            className="w-full bg-white/40 border border-white/60 rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 outline-none focus:border-indigo-500/50 transition-all appearance-none"
+          >
+            <option value="">Select Domain</option>
+            {categories.map((cat: any) => (
+              <option key={cat.id} value={cat.id}>{cat.icon} {cat.name}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Timestamp</label>
+          <input
+            type="date"
+            value={formData.date}
+            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+            className="w-full bg-white/40 border border-white/60 rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 outline-none focus:border-indigo-500/50 transition-all"
+          />
+        </div>
+      </div>
+
+      {error && <p className="text-red-500 text-[10px] font-bold uppercase tracking-wider animate-shake">{error}</p>}
+
+      <button
+        type="submit"
+        disabled={isLoading}
+        className="w-full py-4 bg-indigo-600 text-white rounded-xl font-black text-xs uppercase tracking-[0.2em] shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 mt-2"
+      >
+        {isLoading ? 'Processing...' : 'Commit Transaction'}
+      </button>
+    </form>
   );
-}
+};
+
+export default ExpenseForm;
