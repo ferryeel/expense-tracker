@@ -12,6 +12,17 @@ export default async function handler(
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
+  // Ensure user exists in database
+  const user = await prisma.user.upsert({
+    where: { id: userId },
+    update: {},
+    create: {
+      id: userId,
+      email: `${userId}@example.com`,
+      name: 'Demo User',
+    },
+  });
+
   if (req.method === 'GET') {
     try {
       const categories = await prisma.category.findMany({

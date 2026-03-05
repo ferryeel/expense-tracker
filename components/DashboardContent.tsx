@@ -124,6 +124,7 @@ export default function DashboardContent() {
               }}
               onCreateExpense={createExpense}
               isLoading={expensesLoading}
+              categories={categories}
             />
             <div className="bg-white p-6 rounded-lg shadow">
               <h2 className="text-2xl font-bold mb-4">All Expenses</h2>
@@ -170,6 +171,7 @@ export default function DashboardContent() {
               }}
               onCreateExpense={createExpense}
               isLoading={expensesLoading}
+              categories={categories}
             />
             <ExpenseList
               expenses={expenses}

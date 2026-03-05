@@ -41,6 +41,12 @@ export const useAuth = () => {
     };
 };
 
+export const getAuth = (req: any) => {
+    return {
+        userId: mockUser.id,
+    };
+};
+
 export const UserButton = () => <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white cursor-pointer" title="Mock User Button">DU</div>;
 export const SignIn = () => <div>Sign In (Mock)</div>;
 export const SignUp = () => <div>Sign Up (Mock)</div>;
@@ -53,15 +59,6 @@ export const ClerkLoading = ({ children }: { children: ReactNode }) => null;
 export const useSignIn = () => ({ isLoaded: true, signIn: {}, setActive: () => { } });
 export const useSignUp = () => ({ isLoaded: true, signUp: {}, setActive: () => { } });
 export const useClerk = () => ({ signOut: () => console.log('Mock Sign Out') });
-
-// Server-side mocks
-export const getAuth = (req: any) => {
-    return {
-        userId: mockUser.id,
-        sessionId: 'sess_123',
-        getToken: async () => 'mock_token',
-    };
-};
 
 export const clerkClient = {
     users: {

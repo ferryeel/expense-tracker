@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^7.0.1",
-    "@prisma/client": "^7.4.2",
+    "@prisma/client": "^5.22.0",
     "@supabase/supabase-js": "^2.98.0",
     "@tailwindcss/postcss": "^4.2.1",
     "chart.js": "^4.5.1",
@@ -28,7 +28,7 @@
     "eslint": "8.47.0",
     "eslint-config-next": "13.5.4",
     "postcss": "^8.5.8",
-    "prisma": "^7.4.2",
+    "prisma": "^5.22.0",
     "tailwindcss": "^4.2.1",
     "typescript": "5.2.2"
   }

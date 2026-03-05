@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useCategories } from '@/hooks/useCategories';
 
+interface Category {
+  id: string;
+  name: string;
+  color: string;
+}
+
 interface ExpenseFormProps {
   onSuccess: () => void;
   onCreateExpense: (data: any) => Promise<any>;
   isLoading: boolean;
+  categories?: Category[];
 }
 
-const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCreateExpense, isLoading }) => {
-  const { categories, fetchCategories } = useCategories();
+const ExpenseForm: React.FC<ExpenseFormProps> = ({ onSuccess, onCreateExpense, isLoading, categories: propCategories }) => {
+  const { categories: hookCategories, fetchCategories } = useCategories();
+  const categories = propCategories || hookCategories;
   const [formData, setFormData] = useState({
     amount: '',
     description: '',
